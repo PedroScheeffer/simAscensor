@@ -1,11 +1,17 @@
 {
     "java.project.sourcePaths": [
+        "lib",
         "src",
-        "lib"
+        "tests",
+        "externalLib"
     ],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "lib/**/*.jar"
+        "lib/**/*.jar",
+        "externalLib\\hamcrest-core-2.2.jar",
+        "externalLib\\hamcrest-core-2.2-javadoc.jar",
+        "externalLib\\junit-4.13.2.jar",
+        "externalLib\\junit-4.13.2-javadoc.jar"
     ],
     "[python]": {
         "editor.defaultFormatter": "ms-python.autopep8"
