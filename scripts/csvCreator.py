@@ -15,17 +15,22 @@ def writeCSV(entryText, path="files/archivoEntrada.csv"):
 
 # Creates a enrty has follow: tick, id, ubication, destination, weight, lift
 def createEntrys():
+    cantidad_Ticks = 10
+    max_llamados_xtick = 10
+    cantidad_pisos = 10
+    formula_destino = 1 + math.trunc(cantidad_pisos-1 * random.random())
+    formula_ubicacion = 0
     entry = []
     entry.append(["tick","id","ubicacion","destino","peso","acensor"])
     i = 0;
-    for y in range(0, 10):
-        for x in range(0, random.randint(1, 10)):
-            line = [y,                                          # tick
-                    1000 + i,                                   # id
-                    0,                                          # ubication
-                    math.trunc(10 * random.random()),           # destination
-                    math.trunc(30 + (100 * random.random())),   # weight
-                    -1,]                                        # lift
+    for y in range(0, cantidad_Ticks):
+        for x in range(0, random.randint(1, max_llamados_xtick)):
+            line = [y,                                              # tick
+                    1000 + i,                                       # id
+                    formula_ubicacion,                              # ubication
+                    formula_destino,                                # destination
+                    math.trunc(30 + (100 * random.random())),       # weight
+                    -1,]                                            # lift
             entry.append(line)
             i = 1 + i;
     return entry
