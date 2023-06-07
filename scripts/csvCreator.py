@@ -18,7 +18,6 @@ def createEntrys():
     cantidad_Ticks = 10
     max_llamados_xtick = 10
     cantidad_pisos = 10
-    formula_destino = 1 + math.trunc(cantidad_pisos-1 * random.random())
     formula_ubicacion = 0
     entry = []
     entry.append(["tick","id","ubicacion","destino","peso","acensor"])
@@ -28,12 +27,13 @@ def createEntrys():
             line = [y,                                              # tick
                     1000 + i,                                       # id
                     formula_ubicacion,                              # ubication
-                    formula_destino,                                # destination
+                    formula_destino(cantidad_pisos),                            # destination
                     math.trunc(30 + (100 * random.random())),       # weight
                     -1,]                                            # lift
             entry.append(line)
             i = 1 + i;
     return entry
-
+def formula_destino(cantidad_pisos):
+    return random.randint(1,cantidad_pisos)
 if __name__ == "__main__":
     writeCSV(createEntrys())
