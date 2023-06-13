@@ -1,27 +1,35 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.concurrent.Semaphore;
 public class Planificador {
 
     String pathDefault = "files/archivoEntrada.csv";
     int tick = 0; // Tick de la simulacion
+    List<Persona> todasLasPersonas = new ArrayList<>();
+    List<Persona> esperandoAscensor = new ArrayList<>();
+    static Semaphore semaphoroLevantarPasajero = new Semaphore(1);
+    static Semaphore semaphoroEntrandoAscensor = new Semaphore(1);
+    
+    public Planificador() {
+        FileManager fm = new FileManager();
+        todasLasPersonas = fm.csvToPerson(pathDefault, true);  // TODO mover a una variable para no recalcular
+    } 
 
     public void Simular() {
-        for (tick = 0; tick < 10; tick++) {
+        int ticksTotales = 10;
+        for (tick = 0; tick < ticksTotales; tick++) {
             System.out.println("Tick: " + tick);
-            List<Persona> entradas = procesarPersonas(pathDefault, tick);
-            for (Persona persona : entradas) {
+            esperandoAscensor = procesarPersonas(todasLasPersonas, tick);
+            for (Persona persona : esperandoAscensor) {
                 System.out.println(persona.toString());
             }
         }
     }
 
-    public List<Persona> procesarPersonas(String filePath, int tick) {
-        FileManager fm = new FileManager();
+    public List<Persona> procesarPersonas(List<Persona> todasLasPersonas, int tick) {
         List<Persona> entranAhora = new ArrayList<Persona>();
-        List<Persona> todasLasPersonas = fm.csvToPerson(filePath, true);
-        
+         
         for (Persona persona : todasLasPersonas) {
             if (persona.tick == tick) {
                 entranAhora.add(persona);
