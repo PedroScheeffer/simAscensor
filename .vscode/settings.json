@@ -1,7 +1,28 @@
 {
-    "java.project.sourcePaths": ["src"],
+    "java.project.sourcePaths": [
+        "lib",
+        "src",
+        "tests",
+        "externalLib"
+    ],
     "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar"
-    ]
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "externalLib\\hamcrest-core-2.2.jar",
+            "externalLib\\hamcrest-core-2.2-javadoc.jar",
+            "externalLib\\junit-4.13.2.jar",
+            "externalLib\\junit-4.13.2-javadoc.jar",
+            "externalLib/hamcrest-2.2.jar",
+            "externalLib/hamcrest-2.2-javadoc.jar"
+        ],
+        "exclude": [
+            "externalLib/hamcrest-core-2.2.jar",
+            "externalLib/hamcrest-core-2.2-javadoc.jar"
+        ]
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+    },
+    "python.formatting.provider": "none"
 }
