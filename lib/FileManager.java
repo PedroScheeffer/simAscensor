@@ -50,6 +50,7 @@ public class FileManager {
         return result;
     }
 
-    // TODO crear funciones que creen un record de lo que esta pasando tick a tick, donde se suben en que asensor donde bajan
+    // TODO crear funciones que creen un record de lo que esta pasando 
+    // tick a tick, donde se suben en que asensor donde bajan
     // cuantas personas  etc
 }

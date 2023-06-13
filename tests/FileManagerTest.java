@@ -10,10 +10,14 @@ public class FileManagerTest {
     
     @Test
     public void testReadCSV() {
+        // Arrange 
         FileManager fileManager = new FileManager();
+
         List<Persona> personas = fileManager.csvToPerson(filePath, true);
+        
         Persona expectedResult = new Persona(0,1000,0,5,106);
         Persona actualResult = personas.get(0);
+        
         Assert.assertEquals(expectedResult.toString(), actualResult.toString());
     }
 }

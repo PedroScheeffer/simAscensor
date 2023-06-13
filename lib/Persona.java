@@ -15,7 +15,11 @@ public class Persona {
         this.ascensor = null;  
     }
     public String toString(){
-        String result = Integer.toString(tick) + Integer.toString(id) + Integer.toString(ubicacion) + Integer.toString(destino) + Integer.toString(peso);
+        String result = Integer.toString(tick) + 
+                        Integer.toString(id) + 
+                        Integer.toString(ubicacion) + 
+                        Integer.toString(destino) + 
+                        Integer.toString(peso);
         return result;
     }
 }

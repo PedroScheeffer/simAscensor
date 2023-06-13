@@ -27,7 +27,7 @@ def createEntrys():
             line = [y,                                              # tick
                     1000 + i,                                       # id
                     formula_ubicacion,                              # ubication
-                    formula_destino(cantidad_pisos),                            # destination
+                    formula_destino(cantidad_pisos),                # destination
                     math.trunc(30 + (100 * random.random())),       # weight
                     -1,]                                            # lift
             entry.append(line)
