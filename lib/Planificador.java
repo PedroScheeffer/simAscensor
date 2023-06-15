@@ -2,22 +2,28 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
-public class Planificador {
 
+public class Planificador {
     String pathDefault = "files/archivoEntrada.csv";
-    int tick = 0; // Tick de la simulacion
+    int tick = 0; // Tick de la simulacion 
+    // TODO Ver de implementar un semaforo contador para pausar y continuar los ascensores
     List<Persona> todasLasPersonas = new ArrayList<>();
     List<Persona> esperandoAscensor = new ArrayList<>();
+    // Semaforos para Threads 
     static Semaphore semaphoroLevantarPasajero = new Semaphore(1);
     static Semaphore semaphoroEntrandoAscensor = new Semaphore(1);
-    
+
     public Planificador() {
+        // Se crea y le el archivo csv
         FileManager fm = new FileManager();
         todasLasPersonas = fm.csvToPerson(pathDefault, true);  // TODO mover a una variable para no recalcular
     } 
 
     public void Simular() {
         int ticksTotales = 10;
+        // TODO EMPEZAR ASCENSORES
+        
+        // Empieza Simulacion
         for (tick = 0; tick < ticksTotales; tick++) {
             System.out.println("Tick: " + tick);
             esperandoAscensor = procesarPersonas(todasLasPersonas, tick);
