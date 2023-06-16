@@ -13,11 +13,20 @@ public class Planificador {
     static Semaphore semaphoroLevantarPasajero = new Semaphore(1);
     static Semaphore semaphoroEntrandoAscensor = new Semaphore(1);
 
+    static Planificador _instancPlanificador;
+
     public Planificador() {
         // Se crea y le el archivo csv
         FileManager fm = new FileManager();
-        todasLasPersonas = fm.csvToPerson(pathDefault, true);  // TODO mover a una variable para no recalcular
+        todasLasPersonas = fm.csvToPerson(pathDefault, true);  // TODO mover a una variable para no recalcular 
     } 
+    public static Planificador GetPlanificador() {
+        if(Planificador._instancPlanificador == null){
+            return Planificador._instancPlanificador = new Planificador();
+        } else {
+            return Planificador._instancPlanificador;
+        }
+    }
 
     public void Simular() {
         int ticksTotales = 10;
