@@ -10,9 +10,13 @@ public class PlanificadorTest {
 
     @Test
     public void testProcesarPersonas() {
-        String empty = "C:/Users/pedro/Desktop/Repos/simAscensor/tests/empty.csv";
-        String one_person = "C:/Users/pedro/Desktop/Repos/simAscensor/tests/one_person.csv";
-        String multiple_people = "C:\\Users\\pedro\\Desktop\\Repos\\simAscensor\\tests\\multiple_people.csv";
+        FileManager fm = new FileManager();
+        filePath = "C:/Users/pedro/Desktop/Repos/simAscensor/tests/empty.csv";
+        List<Persona> empty = fm.csvToPerson(filePath, true);
+        filePath = "C:/Users/pedro/Desktop/Repos/simAscensor/tests/one_person.csv";
+        List<Persona> one_person = fm.csvToPerson(filePath, true);
+        filePath = "C:/Users/pedro/Desktop/Repos/simAscensor/tests/multiple_people.csv";
+        List<Persona> multiple_people = fm.csvToPerson(filePath, true); 
 
 
         // Test case 1: process empty file
@@ -31,7 +35,7 @@ public class PlanificadorTest {
         assertEquals(3, result3.get(1).tick);
 
         // Test case 4: process file with multiple people, none at given tick
-        List<Persona> result4 = planificador.procesarPersonas("multiple_people.csv", 4);
+        List<Persona> result4 = planificador.procesarPersonas(multiple_people, 4);
         assertEquals(0, result4.size());
     }
 }
