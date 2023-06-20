@@ -125,7 +125,7 @@ class Ascensor implements Runnable {
                         break;
                     }
                     if (this.pasajeros.isEmpty()) {
-
+                        buscarPasajerosOtrosPisos();
                     }
                 }
                 break;
@@ -159,6 +159,13 @@ class Ascensor implements Runnable {
                 break;
             default:
                 break;
+        }
+    }
+
+    // revisa denuevo los pasajeros esperando y levante el que este más cerca 
+    private void buscarPasajerosOtrosPisos() {
+        for () {
+            
         }
     }
 
