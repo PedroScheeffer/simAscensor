@@ -24,4 +24,5 @@ public class Persona {
     }
     public void revisarPedidos(EstadoAscensor detenido) {
     }
+    
 }

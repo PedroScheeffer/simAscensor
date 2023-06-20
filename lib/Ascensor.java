@@ -8,18 +8,64 @@ pasajeros en su piso y si los puede levantar, si y el estado es detenido,
 el revisa si hay pasajeros en otro pisos y va hacia ellos */
 public class Ascensor implements Runnable {
     // Valores Ascensor
+    int _id;
     EstadoAscensor estado = EstadoAscensor.DETENIDO; // DETENIDO, SUBIENDO, BAJANDO, ENTRANDO
     public List<Persona> pasajeros = new ArrayList<Persona>();
     private int _pesoActualkg = 0;
     private int _pesoMaximokg = 400; // kg
-    private int _tick = 0;
     private int _cantidadPersonasMaximas = 5;
     private int _ubicacion = 0;
     private int _destino;
 
-    public void revisarPasajeros() {
+    Ascensor(int Id) {
+        _id = Id;
     }
 
+    public void revisarPasajeros() {
+    }
+/*
+    @Override
+        public void run() {
+            while (!Thread.currentThread().isInterrupted()) {
+                // Realizar el trabajo del ascensor durante un tick
+                System.out.println("Ascensor " + _id + " trabajando en el tick " + Planificador.GetPlanificador().tick);
+                switch (estado) {
+                    case DETENIDO:
+                        Detendio();
+                        break;
+                    case SUBIENDO:
+                        Subiendo();
+                        break;
+                    case BAJANDO:
+                        Bajando();
+                        break;
+                    default:
+                        break;
+                }
+
+                // Simular tiempo de trabajo
+                try {
+                    Thread.sleep(500); // Trabajo del ascensor durante medio segundo
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+
+                // Indicar que el trabajo ha terminado
+                Planificador.GetPlanificador().semaforoAscensores.release();
+                // TODO actualizar datos de los pasajeros
+
+                // Esperar a que Simular avance al siguiente tick
+                try {
+                    Planificador.GetPlanificador().semaforoAscensores.acquire();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+                
+                // Realizar otras operaciones o verificar si se debe detener el ascensor
+            }
+*/
     @Override
     public void run() {
         try {
@@ -28,7 +74,7 @@ public class Ascensor implements Runnable {
             // segun su estado
             // los atiende y sigue setea su estado segun lo que este haciendo
             // TODO LLAMAR
-            Planificador.GetPlanificador().semaforoAscensoresProcesanPasajeros.acquire();
+            Planificador.GetPlanificador().semaforoAscensores.acquire();
 
             switch (estado) {
                 case DETENIDO:
@@ -42,22 +88,22 @@ public class Ascensor implements Runnable {
                     break;
                 default:
                     break;
-            } 
-            
+            }
+            Planificador.GetPlanificador().semaforoAscensores.acquire();
+
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
-            Planificador.GetPlanificador().semaforoAscensoresProcesanPasajeros.release();
+            Planificador.GetPlanificador().semaforoAscensores.release();
         }
-
     }
 
     // DETENIDO, revisa si hay pedidos si los hay y los puede tomar y cambia su
     // estado para su proximo tick
     public void Detendio() {
         if (Planificador.GetPlanificador().todasLasPersonas.size() == 0) {
-            if(_destino != 0 || _ubicacion != 0){
+            if (_destino != 0 || _ubicacion != 0) {
                 _destino = 0;
             }
             irDestino();
@@ -68,27 +114,32 @@ public class Ascensor implements Runnable {
         }
         // termina su turno
     }
-    // SUBIENDO, el ascensor sube un piso, baja los pasajeros de ese piso 
-    // revisa si hay más pedidos y si no los hay cambia de estado 
+
+    // SUBIENDO, el ascensor sube un piso, baja los pasajeros de ese piso
+    // revisa si hay más pedidos y si no los hay cambia de estado
     public void Subiendo() {
-        irDestino();;
+        irDestino();
         bajarPasajeros();
         levantarPasajeros(EstadoAscensor.SUBIENDO);
-        if(pasajeros.isEmpty()){
+        if (pasajeros.isEmpty()) {
             estado = EstadoAscensor.DETENIDO;
         }
     }
-    // BAJANDO, el ascensor baja un piso, deja los psajeroes en su destino 
-    // y sube los pasajeros de ese piso 
+
+    // BAJANDO, el ascensor baja un piso, deja los psajeroes en su destino
+    // y sube los pasajeros de ese piso
     public void Bajando() {
-        irDestino();;
+        irDestino();
+        ;
         bajarPasajeros();
         levantarPasajeros(EstadoAscensor.BAJANDO);
-        if(pasajeros.isEmpty()){
+        if (pasajeros.isEmpty()) {
             estado = EstadoAscensor.DETENIDO;
         }
     }
-    // LevantarPajeros, revisa la ubicacion de la personas si estan en el mismo piso,
+
+    // LevantarPajeros, revisa la ubicacion de la personas si estan en el mismo
+    // piso,
     // DETENIDO, lo los levanta y segun el destino cambia su estado
     // SUBIENDO y BAJANDO si van al mismo sentido los levantan
     private void levantarPasajeros(EstadoAscensor estado) {
@@ -144,16 +195,15 @@ public class Ascensor implements Runnable {
                 break;
         }
     }
-    
+
     // Baja los pasajeros que estan en el su destino
-    private void bajarPasajeros(){
+    private void bajarPasajeros() {
         if (pasajeros.isEmpty()) {
             return;
-        }
-        else
-        {
+        } else {
             for (Persona persona : pasajeros) {
-                if(persona.destino == _ubicacion);
+                if (persona.destino == _ubicacion)
+                    ;
                 {
                     pasajeros.remove(persona);
                 }
@@ -162,11 +212,10 @@ public class Ascensor implements Runnable {
     }
 
     public Boolean puedeSubir(Persona persona) {
-        if(!(_cantidadPersonasMaximas >= pasajeros.size())){
+        if (!(_cantidadPersonasMaximas >= pasajeros.size())) {
             return false;
         }
-        if(!(persona.peso + _pesoActualkg < _pesoMaximokg))
-        {
+        if (!(persona.peso + _pesoActualkg < _pesoMaximokg)) {
             return false;
         }
         switch (estado) {
@@ -189,14 +238,17 @@ public class Ascensor implements Runnable {
                 return false;
         }
     }
-    // el ascensor se mueve a su destino 
-    private void irDestino(){
-        if(_destino != _ubicacion){
+
+    // el ascensor se mueve a su destino
+    private void irDestino() {
+        System.out.println("estoy en el piso: " + this._ubicacion + " y destino: " + _destino);	
+        if (_destino != _ubicacion) {
             if (_destino > _ubicacion) {
                 _ubicacion++;
             } else {
                 _ubicacion--;
             }
         }
+        System.out.println("Me movi al piso: " + this._ubicacion);
     }
 }
