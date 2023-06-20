@@ -164,8 +164,14 @@ class Ascensor implements Runnable {
 
     // revisa denuevo los pasajeros esperando y levante el que este más cerca 
     private void buscarPasajerosOtrosPisos() {
-        for () {
-            
+        if(!Planificador.GetPlanificador().esperandoAscensor.isEmpty()){
+            Persona pasajeroDestino = Planificador.GetPlanificador().esperandoAscensor.get(0);
+            this._destino = pasajeroDestino.ubicacion;
+            if (pasajeroDestino.ubicacion > this._ubicacion) { // cambio el estado del ascensor
+                this.estado = EstadoAscensor.SUBIENDO;
+            } else {
+                this.estado = EstadoAscensor.BAJANDO;
+            }
         }
     }
 
