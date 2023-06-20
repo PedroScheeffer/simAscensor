@@ -2,15 +2,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/* El ascensor es un hilo, en el comienzo del la simulacion revisa si hay 
-pasajeros en su piso y si los puede levantar, si y el estado es detenido,
-el revisa si hay pasajeros en otro pisos y va hacia ellos 
-// Ascensor Segun el estado hace tiene una logica
-// El ascensor, revisa asi hay pedidos, si los hay revisa los que puede atender
-// segun su estado
-// los atiende y sigue setea su estado segun lo que este haciendo
-*/
-public class Ascensor implements Runnable {
+class Ascensor implements Runnable {
     // Valores Ascensor
     int _id;
     EstadoAscensor estado = EstadoAscensor.DETENIDO; // DETENIDO, SUBIENDO, BAJANDO, ENTRANDO
@@ -25,53 +17,6 @@ public class Ascensor implements Runnable {
         _id = Id;
     }
 
-    public void revisarPasajeros() {
-    }
-
-    /*
-     * @Override
-     * public void run() {
-     * while (!Thread.currentThread().isInterrupted()) {
-     * // Realizar el trabajo del ascensor durante un tick
-     * System.out.println("Ascensor " + _id + " trabajando en el tick " +
-     * Planificador.GetPlanificador().tick);
-     * switch (estado) {
-     * case DETENIDO:
-     * Detendio();
-     * break;
-     * case SUBIENDO:
-     * Subiendo();
-     * break;
-     * case BAJANDO:
-     * Bajando();
-     * break;
-     * default:
-     * break;
-     * }
-     * 
-     * // Simular tiempo de trabajo
-     * try {
-     * Thread.sleep(500); // Trabajo del ascensor durante medio segundo
-     * } catch (InterruptedException e) {
-     * Thread.currentThread().interrupt();
-     * break;
-     * }
-     * 
-     * // Indicar que el trabajo ha terminado
-     * Planificador.GetPlanificador().semaforoAscensores.release();
-     * // TODO actualizar datos de los pasajeros
-     * 
-     * // Esperar a que Simular avance al siguiente tick
-     * try {
-     * Planificador.GetPlanificador().semaforoAscensores.acquire();
-     * } catch (InterruptedException e) {
-     * Thread.currentThread().interrupt();
-     * break;
-     * }
-     * 
-     * // Realizar otras operaciones o verificar si se debe detener el ascensor
-     * }
-     */
     @Override
     public void run() {
         try {
@@ -83,7 +28,6 @@ public class Ascensor implements Runnable {
                 Planificador.GetPlanificador().semaforoAscensores.acquire();
                 // semaforo que controla el uso de los tiks
                 System.out.println("Ascensor " + _id + " trabajando en el tick " + Planificador.GetPlanificador().tick);
-
                 switch (estado) {
                     case DETENIDO:
                         Detendio();
@@ -102,7 +46,7 @@ public class Ascensor implements Runnable {
             } finally {
                 Planificador.GetPlanificador().semaforoAscensores.release();
             }
-            // Avisa que termino el tick 
+            // Avisa que termino el tick
             synchronized (Planificador.GetPlanificador().semaforoAscensores) {
                 Planificador.GetPlanificador().semaforoAscensores.notify();
             }
@@ -170,14 +114,18 @@ public class Ascensor implements Runnable {
                     if (puedeSubir(persona)) { // reviso si la persona y ascensor mismo piso
                         pasajeros.add(persona); // Add persona to pasajeros list
                         this._destino = persona.destino; // cambio el destino del ascnesor
-                        iterator.remove(); // Remove persona from esperandoAscensor list
+                        Planificador.GetPlanificador().esperandoAscensor.remove(persona); // Remove persona from
+                                                                                          // esperandoAscensor list
                         if (persona.destino > this._ubicacion) { // cambio el estado del ascensor
-                            estado = EstadoAscensor.SUBIENDO;
+                            this.estado = EstadoAscensor.SUBIENDO;
                         } else {
-                            estado = EstadoAscensor.BAJANDO;
+                            this.estado = EstadoAscensor.BAJANDO;
                         }
                         levantarPasajeros(estado); // reviso los pedidos denueevo en diferente estado
                         break;
+                    }
+                    if (this.pasajeros.isEmpty()) {
+
                     }
                 }
                 break;
@@ -214,16 +162,16 @@ public class Ascensor implements Runnable {
         }
     }
 
-    // Baja los pasajeros que estan en el su destino
+    // Remove passengers that have reached their destination
     private void bajarPasajeros() {
         if (pasajeros.isEmpty()) {
             return;
         } else {
-            for (Persona persona : pasajeros) {
-                if (persona.destino == _ubicacion)
-                    ;
-                {
-                    pasajeros.remove(persona);
+            Iterator<Persona> it = pasajeros.iterator();
+            while (it.hasNext()) {
+                Persona persona = it.next();
+                if (persona.destino == _ubicacion) {
+                    it.remove();
                 }
             }
         }

@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
@@ -21,6 +22,7 @@ public class Planificador {
 
     public Planificador() {
         // Se crea y le el archivo csv
+        _instancPlanificador = this;
         FileManager fm = new FileManager();
         todasLasPersonas = fm.csvToPerson(pathDefault, true); // TODO mover a una variable para no recalcular
     }
