@@ -16,7 +16,7 @@ public class Planificador {
     // TODO Ver de implementar un semaforo contador para pausar y continuar los
     // ascensores
     Semaphore semaforoAscensores = new Semaphore(cantidadAscensores);
-
+    Semaphore semaforoTick = new Semaphore(0);
     static Planificador _instancPlanificador; // queremos solo un planificado
 
     public Planificador() {
@@ -35,20 +35,33 @@ public class Planificador {
 
     public void Simular() {
         int ticksTotales = 10;
+
         // Empezamos los ASCENSORES
         for (int i = 0; i < cantidadAscensores; i++) {
             Thread ascensorThread = new Thread(new Ascensor(i));
             ascensorThread.start();
         }
-        // TODO imprimir informacion de las personsa, de cada ascensor 
-        
+        // TODO imprimir informacion de las personsa, de cada ascensor
+
         // Empieza Simulacion
         for (tick = 0; tick < ticksTotales; tick++) {
-            System.out.println("Tick: " + tick);
-            esperandoAscensor = procesarPersonas(todasLasPersonas, tick);
-
-            for (Persona persona : esperandoAscensor) {
-                System.out.println(persona.toString());
+            try {
+                semaforoAscensores.acquire(cantidadAscensores); // Acquire permits for all Ascensor threads
+                System.out.println("Tick: " + tick);
+                esperandoAscensor = procesarPersonas(todasLasPersonas, tick);
+                // Log de consola
+                for (Persona persona : esperandoAscensor) {
+                    System.out.println(persona.toString());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                semaforoAscensores.release(cantidadAscensores); // Release permits for all Ascensor threads
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

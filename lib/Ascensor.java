@@ -1,11 +1,15 @@
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /* El ascensor es un hilo, en el comienzo del la simulacion revisa si hay 
 pasajeros en su piso y si los puede levantar, si y el estado es detenido,
-el revisa si hay pasajeros en otro pisos y va hacia ellos */
+el revisa si hay pasajeros en otro pisos y va hacia ellos 
+// Ascensor Segun el estado hace tiene una logica
+// El ascensor, revisa asi hay pedidos, si los hay revisa los que puede atender
+// segun su estado
+// los atiende y sigue setea su estado segun lo que este haciendo
+*/
 public class Ascensor implements Runnable {
     // Valores Ascensor
     int _id;
@@ -23,12 +27,63 @@ public class Ascensor implements Runnable {
 
     public void revisarPasajeros() {
     }
-/*
+
+    /*
+     * @Override
+     * public void run() {
+     * while (!Thread.currentThread().isInterrupted()) {
+     * // Realizar el trabajo del ascensor durante un tick
+     * System.out.println("Ascensor " + _id + " trabajando en el tick " +
+     * Planificador.GetPlanificador().tick);
+     * switch (estado) {
+     * case DETENIDO:
+     * Detendio();
+     * break;
+     * case SUBIENDO:
+     * Subiendo();
+     * break;
+     * case BAJANDO:
+     * Bajando();
+     * break;
+     * default:
+     * break;
+     * }
+     * 
+     * // Simular tiempo de trabajo
+     * try {
+     * Thread.sleep(500); // Trabajo del ascensor durante medio segundo
+     * } catch (InterruptedException e) {
+     * Thread.currentThread().interrupt();
+     * break;
+     * }
+     * 
+     * // Indicar que el trabajo ha terminado
+     * Planificador.GetPlanificador().semaforoAscensores.release();
+     * // TODO actualizar datos de los pasajeros
+     * 
+     * // Esperar a que Simular avance al siguiente tick
+     * try {
+     * Planificador.GetPlanificador().semaforoAscensores.acquire();
+     * } catch (InterruptedException e) {
+     * Thread.currentThread().interrupt();
+     * break;
+     * }
+     * 
+     * // Realizar otras operaciones o verificar si se debe detener el ascensor
+     * }
+     */
     @Override
-        public void run() {
-            while (!Thread.currentThread().isInterrupted()) {
-                // Realizar el trabajo del ascensor durante un tick
+    public void run() {
+        try {
+            Thread.sleep(500);
+        } catch (Exception e) {
+        }
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                Planificador.GetPlanificador().semaforoAscensores.acquire();
+                // semaforo que controla el uso de los tiks
                 System.out.println("Ascensor " + _id + " trabajando en el tick " + Planificador.GetPlanificador().tick);
+
                 switch (estado) {
                     case DETENIDO:
                         Detendio();
@@ -42,67 +97,30 @@ public class Ascensor implements Runnable {
                     default:
                         break;
                 }
-
-                // Simular tiempo de trabajo
-                try {
-                    Thread.sleep(500); // Trabajo del ascensor durante medio segundo
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-
-                // Indicar que el trabajo ha terminado
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
                 Planificador.GetPlanificador().semaforoAscensores.release();
-                // TODO actualizar datos de los pasajeros
-
-                // Esperar a que Simular avance al siguiente tick
-                try {
-                    Planificador.GetPlanificador().semaforoAscensores.acquire();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-                
-                // Realizar otras operaciones o verificar si se debe detener el ascensor
             }
-*/
-    @Override
-    public void run() {
-        try {
-            // Ascensor Segun el estado hace tiene una logica
-            // El ascensor, revisa asi hay pedidos, si los hay revisa los que puede atender
-            // segun su estado
-            // los atiende y sigue setea su estado segun lo que este haciendo
-            // TODO LLAMAR
-            Planificador.GetPlanificador().semaforoAscensores.acquire();
-
-            switch (estado) {
-                case DETENIDO:
-                    Detendio();
-                    break;
-                case SUBIENDO:
-                    Subiendo();
-                    break;
-                case BAJANDO:
-                    Bajando();
-                    break;
-                default:
-                    break;
+            // Avisa que termino el tick 
+            synchronized (Planificador.GetPlanificador().semaforoAscensores) {
+                Planificador.GetPlanificador().semaforoAscensores.notify();
             }
-            Planificador.GetPlanificador().semaforoAscensores.acquire();
 
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            Planificador.GetPlanificador().semaforoAscensores.release();
+            // Simular tiempo de trabajo
+            try {
+                Thread.sleep(500); // Trabajo del ascensor durante medio segundo
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
         }
     }
 
     // DETENIDO, revisa si hay pedidos si los hay y los puede tomar y cambia su
     // estado para su proximo tick
     public void Detendio() {
-        if (Planificador.GetPlanificador().todasLasPersonas.size() == 0) {
+        if (Planificador.GetPlanificador().esperandoAscensor.size() == 0) {
             if (_destino != 0 || _ubicacion != 0) {
                 _destino = 0;
             }
@@ -241,7 +259,7 @@ public class Ascensor implements Runnable {
 
     // el ascensor se mueve a su destino
     private void irDestino() {
-        System.out.println("estoy en el piso: " + this._ubicacion + " y destino: " + _destino);	
+        System.out.println("estoy en el piso: " + this._ubicacion + " y destino: " + _destino);
         if (_destino != _ubicacion) {
             if (_destino > _ubicacion) {
                 _ubicacion++;
