@@ -1,34 +1,67 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Planificador {
-
     String pathDefault = "files/archivoEntrada.csv";
     int tick = 0; // Tick de la simulacion
+    int cantidadAscensores = 1;
+    List<Persona> todasLasPersonas = new ArrayList<>();
+    List<Persona> esperandoAscensor = new ArrayList<>();
+
+    // Locks para Threads
+    ReentrantLock lockLevantarPasajero = new ReentrantLock();
+    // TODO Ver de implementar un semaforo contador para pausar y continuar los
+    // ascensores
+    Semaphore semaforoAscensores = new Semaphore(cantidadAscensores);
+
+    static Planificador _instancPlanificador; // queremos solo un planificado
+
+    public Planificador() {
+        // Se crea y le el archivo csv
+        FileManager fm = new FileManager();
+        todasLasPersonas = fm.csvToPerson(pathDefault, true); // TODO mover a una variable para no recalcular
+    }
+
+    public static Planificador GetPlanificador() {
+        if (Planificador._instancPlanificador == null) {
+            return Planificador._instancPlanificador = new Planificador();
+        } else {
+            return Planificador._instancPlanificador;
+        }
+    }
 
     public void Simular() {
-        for (tick = 0; tick < 10; tick++) {
+        int ticksTotales = 10;
+        // Empezamos los ASCENSORES
+        for (int i = 0; i < cantidadAscensores; i++) {
+            Thread ascensorThread = new Thread(new Ascensor(i));
+            ascensorThread.start();
+        }
+        // TODO imprimir informacion de las personsa, de cada ascensor 
+        
+        // Empieza Simulacion
+        for (tick = 0; tick < ticksTotales; tick++) {
             System.out.println("Tick: " + tick);
-            List<Persona> entradas = procesarPersonas(pathDefault, tick);
-            for (Persona persona : entradas) {
+            esperandoAscensor = procesarPersonas(todasLasPersonas, tick);
+
+            for (Persona persona : esperandoAscensor) {
                 System.out.println(persona.toString());
             }
         }
     }
 
-    public List<Persona> procesarPersonas(String filePath, int tick) {
-        FileManager fm = new FileManager();
+    public List<Persona> procesarPersonas(List<Persona> todasLasPersonas, int tick) {
         List<Persona> entranAhora = new ArrayList<Persona>();
-        List<Persona> todasLasPersonas = fm.csvToPerson(filePath, true);
-        
         for (Persona persona : todasLasPersonas) {
             if (persona.tick == tick) {
                 entranAhora.add(persona);
-                if(todasLasPersonas.size() == 0){
+                if (todasLasPersonas.size() == 0) {
                     break;
                 }
-            }else if(persona.tick > tick){
+            } else if (persona.tick > tick) {
                 break;
             }
         }

@@ -22,4 +22,7 @@ public class Persona {
                         Integer.toString(peso);
         return result;
     }
+    public void revisarPedidos(EstadoAscensor detenido) {
+    }
+    
 }

@@ -18,7 +18,7 @@ def createEntrys():
     cantidad_Ticks = 10
     max_llamados_xtick = 10
     cantidad_pisos = 10
-    formula_ubicacion = 0
+    formula_ubicacion = 0  # TODO que empiezen en diferentes pisos
     entry = []
     entry.append(["tick","id","ubicacion","destino","peso","acensor"])
     i = 0;
@@ -34,6 +34,7 @@ def createEntrys():
             i = 1 + i;
     return entry
 def formula_destino(cantidad_pisos):
-    return random.randint(1,cantidad_pisos)
+    return random.randint(1, cantidad_pisos)
+
 if __name__ == "__main__":
     writeCSV(createEntrys())
