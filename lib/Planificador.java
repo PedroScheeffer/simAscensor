@@ -7,20 +7,16 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Planificador {
     String pathDefault = "files/archivoEntrada.csv";
-    int tick = 0; // Tick de la simulacion
+    int tick = 0; 
     int ticksTotales = 2000;
-
     int cantidadAscensores = 4;
     List<Persona> todasLasPersonas = new ArrayList<>();
     List<Persona> esperandoAscensor = new ArrayList<>();
-
-    // Locks para Threads
-    ReentrantLock lockLevantarPasajero = new ReentrantLock();
-    // TODO Ver de implementar un semaforo contador para pausar y continuar los
-    // ascensores
-    Semaphore semaforoAscensores = new Semaphore(cantidadAscensores);
-    Semaphore semaforoTick = new Semaphore(0);
     static Planificador _instancPlanificador; // queremos solo un planificado
+
+    ReentrantLock lockLevantarPasajero = new ReentrantLock(); // Locks para Threads
+    // Semaforo ascensores
+    Semaphore semaforoTick = new Semaphore(0);
 
     public Planificador() {
         // Se crea y le el archivo csv

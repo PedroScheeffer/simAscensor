@@ -170,18 +170,26 @@ class Ascensor implements Runnable {
         }
     }
 
-    // revisa denuevo los pasajeros esperando y levante el que este más cerca
-    private void buscarPasajerosOtrosPisos() {
-        if (!Planificador.GetPlanificador().esperandoAscensor.isEmpty()) {
-            Persona pasajeroDestino = Planificador.GetPlanificador().esperandoAscensor.get(0);
-            this._destino = pasajeroDestino.ubicacion;
-            if (pasajeroDestino.ubicacion > this._ubicacion) { // cambio el estado del ascensor
-                this.estado = EstadoAscensor.SUBIENDO;
-            } else {
-                this.estado = EstadoAscensor.BAJANDO;
+// revisa denuevo los pasajeros esperando y levante el que este más cerca
+// cuando un ascensor es asignado, cambia la variable ascensor de persona
+// asi sabemos que hay un ascenor yendo a levantar esa persona
+private void buscarPasajerosOtrosPisos() {
+    if (!Planificador.GetPlanificador().esperandoAscensor.isEmpty()) {
+        for (int i = 0; i < Planificador.GetPlanificador().esperandoAscensor.size(); i++) {
+            Persona pasajeroDestino = Planificador.GetPlanificador().esperandoAscensor.get(i);
+            if (pasajeroDestino.ascensor == null) {
+                this._destino = pasajeroDestino.ubicacion;
+                pasajeroDestino.ascensor = this;
+                if (pasajeroDestino.ubicacion > this._ubicacion) { // cambio el estado del ascensor
+                    this.estado = EstadoAscensor.SUBIENDO;
+                } else {
+                    this.estado = EstadoAscensor.BAJANDO;
+                }
+                break;
             }
         }
     }
+}
 
     private void bajarPasajeros() {
         if (pasajeros.isEmpty()) {
