@@ -27,7 +27,7 @@ public void run() {
         try {
             Planificador.GetPlanificador().semaforoTick.acquire();
             // semaforo que controla el uso de los tiks
-            System.out.println("Ascensor " + _id + " trabajando en el tick " + Planificador.GetPlanificador().tick);
+            System.out.println("Ascensor " + _id + " trabajando en el tick " + Planificador.GetPlanificador().tick + "En el piso " + _ubicacion + " y el destino es " + _destino + " con " + pasajeros.size() + " pasajeros");
             Planificador.GetPlanificador().lockLevantarPasajero.lock();
             switch (estado) {
                 case DETENIDO:
@@ -95,7 +95,6 @@ public void run() {
         }
     }
 
-// Refactored levantarPasajeros function to include print statements
 private void levantarPasajeros(EstadoAscensor estado) {
     switch (estado) {
         case DETENIDO:
@@ -110,7 +109,7 @@ private void levantarPasajeros(EstadoAscensor estado) {
                     } else {
                         this.estado = EstadoAscensor.BAJANDO;
                     }
-                    System.out.println(persona.id + " subió al ascensor");
+                    System.out.println(persona.id + " subió al ascensor" + _id + " piso " + _ubicacion);
                     levantarPasajeros(estado);
                     break;
                 }
@@ -128,7 +127,7 @@ private void levantarPasajeros(EstadoAscensor estado) {
                     if (persona.destino > _destino) {
                         _destino = persona.destino;
                     }
-                    System.out.println(persona.id + " subió al ascensor");
+                    System.out.println(persona.id + " subió al ascensor" + _id + " piso " + _ubicacion);
                 }
             }
             break;
@@ -141,7 +140,7 @@ private void levantarPasajeros(EstadoAscensor estado) {
                     if (persona.destino < _destino) {
                         _destino = persona.destino;
                     }
-                    System.out.println(persona.id + " subio del ascensor");
+                    System.out.println(persona.id + " subió al ascensor" + _id + " piso " + _ubicacion);
                 }
             }
             break;
@@ -173,7 +172,7 @@ private void bajarPasajeros() {
             Persona persona = it.next();
             if (persona.destino == _ubicacion) {
                 it.remove();
-                System.out.println(persona.id + " bajó del ascensor");
+                System.out.println(persona.id + " Bajo del ascensor" + _id + " piso " + _ubicacion);
             }
         }
     }
@@ -209,7 +208,7 @@ private void bajarPasajeros() {
 
     // el ascensor se mueve a su destino
     private void irDestino() {
-        System.out.println("estoy en el piso: " + this._ubicacion + " y destino: " + _destino);
+        System.out.println(_id + " estoy en el piso: " + this._ubicacion + " y destino: " + _destino);
         if (_destino != _ubicacion) {
             if (_destino > _ubicacion) {
                 _ubicacion++;
@@ -217,6 +216,6 @@ private void bajarPasajeros() {
                 _ubicacion--;
             }
         }
-        System.out.println("Me movi al piso: " + this._ubicacion);
+        System.out.println(_id + " Me movi al piso: " + this._ubicacion);
     }
 }

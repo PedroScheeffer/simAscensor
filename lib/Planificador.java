@@ -36,7 +36,7 @@ public class Planificador {
     }
 
     public void Simular() {
-        int ticksTotales = 10;
+        int ticksTotales = 1000;
 
         // Empezamos los ASCENSORES
         for (int i = 0; i < cantidadAscensores; i++) {
