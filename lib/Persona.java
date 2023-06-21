@@ -4,7 +4,7 @@ public class Persona {
     int ubicacion; // ubication
     int destino; // destination
     int peso; // weight
-    // Ascensor ascensor; // lift
+    Ascensor ascensor; // lift
 
     public Persona(int tick, int id, int ubicacion, int destino, int peso){
         this.tick = tick;
@@ -12,7 +12,7 @@ public class Persona {
         this.ubicacion = ubicacion;
         this.destino = destino;
         this.peso = peso;
-        //this.ascensor = null;  
+        this.ascensor = null;  
     }
     public String toString(){
         String result = Integer.toString(tick) + 
@@ -22,7 +22,4 @@ public class Persona {
                         Integer.toString(peso);
         return result;
     }
-    public void revisarPedidos(EstadoAscensor detenido) {
-    }
-    
 }

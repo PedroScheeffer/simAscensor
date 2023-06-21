@@ -7,18 +7,16 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Planificador {
     String pathDefault = "files/archivoEntrada.csv";
-    int tick = 0; // Tick de la simulacion
+    int tick = 0; 
+    int ticksTotales = 2000;
     int cantidadAscensores = 4;
     List<Persona> todasLasPersonas = new ArrayList<>();
     List<Persona> esperandoAscensor = new ArrayList<>();
-
-    // Locks para Threads
-    ReentrantLock lockLevantarPasajero = new ReentrantLock();
-    // TODO Ver de implementar un semaforo contador para pausar y continuar los
-    // ascensores
-    Semaphore semaforoAscensores = new Semaphore(cantidadAscensores);
-    Semaphore semaforoTick = new Semaphore(0);
     static Planificador _instancPlanificador; // queremos solo un planificado
+
+    ReentrantLock lockLevantarPasajero = new ReentrantLock(); // Locks para Threads
+    // Semaforo ascensores
+    Semaphore semaforoTick = new Semaphore(0);
 
     public Planificador() {
         // Se crea y le el archivo csv
@@ -36,7 +34,6 @@ public class Planificador {
     }
 
     public void Simular() {
-        int ticksTotales = 10;
 
         // Empezamos los ASCENSORES
         for (int i = 0; i < cantidadAscensores; i++) {
@@ -48,18 +45,22 @@ public class Planificador {
         // Empieza Simulacion
         for (tick = 0; tick < ticksTotales; tick++) {
             try {
-                System.out.println("Tick: " + tick);
-                esperandoAscensor = procesarPersonas(todasLasPersonas, tick);
+                System.out.println("------- Tick: " + tick + " -------");
+                esperandoAscensor.addAll(procesarPersonas(todasLasPersonas, tick));
                 // Log de consola
+                System.out.println("Entraron en el edificio ");
                 for (Persona persona : esperandoAscensor) {
-                    System.out.println(persona.toString());
+                    System.out.println("Persona " + persona.id +
+                    " va del " + persona.ubicacion +
+                    " --> " + persona.destino  
+                    );
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 semaforoTick.release(cantidadAscensores); // Release permits for all Ascensor threads
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(200);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
