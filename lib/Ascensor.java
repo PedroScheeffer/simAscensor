@@ -225,6 +225,8 @@ private void buscarPasajerosOtrosPisos() {
             } else {
                 _ubicacion--;
             }
+        }else if (!pasajeros.isEmpty()) {
+            actualizarDestino(pasajeros.get(0), this.estado);
         }
         System.out.println(text + " --> Nuevo Piso: " + this._ubicacion);
     }
