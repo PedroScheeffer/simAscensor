@@ -15,8 +15,8 @@ def writeCSV(entryText, path="files/archivoEntrada.csv"):
 
 # Creates a enrty has follow: tick, id, ubication, destination, weight, lift
 def createEntrys():
-    cantidad_Ticks = 1000
-    max_llamados_xtick = 10
+    cantidad_Ticks = 100
+    max_llamados_xtick = 3
     cantidad_pisos = 10
     entry = []
     entry.append(["tick","id","ubicacion","destino","peso","acensor"])
