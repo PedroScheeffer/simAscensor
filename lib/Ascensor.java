@@ -12,7 +12,8 @@ class Ascensor implements Runnable {
     private int _cantidadPersonasMaximas = 5;
     private int _ubicacion = 0;
     private int _destino;
-
+    public int antendidos = 0;
+    public int promedio = 0; 
     Ascensor(int Id) {
         _id = Id;
     }
@@ -26,7 +27,7 @@ class Ascensor implements Runnable {
                 // semaforo que controla el uso de los tiks
                 System.out.println("Ascensor: " + _id +
                         " Piso: " + _ubicacion + " Destino: " + _destino +
-                        " Pasajeros: " + pasajeros.size() + " Peso: " + _pesoActualkg + " kg");
+                        " Pasajeros: " + pasajeros.size() + " Peso: " + _pesoActualkg + " kg" + " mi Promedio: " + promedio);
                 Planificador.GetPlanificador().lockLevantarPasajero.lock();
                 switch (estado) {
                     case DETENIDO:
@@ -50,6 +51,7 @@ class Ascensor implements Runnable {
             }finally{
                 Planificador.GetPlanificador().semaforoAscensores.release();
             }
+
         }
     }
 
@@ -208,6 +210,8 @@ private void buscarPasajerosOtrosPisos() {
         System.out.println("el pasajero " + persona.id + " bajó del ascensor " + _id + " en el piso " + _ubicacion
                 + " del " + persona.ubicacion + " y demoro " + (Planificador.GetPlanificador().tick - persona.tick)
                 + " ticks");
+                // calcula cuanto demoro en llegar al piso y actualiza el promedio 
+                promedio += ((Planificador.GetPlanificador().tick - persona.tick) + (promedio * antendidos)) / (antendidos + 1);
     }
 
     // el ascensor se mueve a su destino

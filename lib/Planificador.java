@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Planificador {
     String pathDefault = "files/archivoEntrada.csv";
     int tick = 0; 
-    int ticksTotales = 2000;
+    int ticksTotales = 2000; // cuantos ciclo de simulacion
     int cantidadAscensores = 4;
     List<Persona> todasLasPersonas = new ArrayList<>();
     List<Persona> esperandoAscensor = new ArrayList<>();
@@ -45,7 +45,7 @@ public class Planificador {
         for (tick = 0; tick < ticksTotales; tick++) {
             try {
                 semaforoAscensores.acquire(cantidadAscensores);
-                System.out.println("------- Tick: " + tick + " -------");
+                System.out.println("------- Tick: " + tick  +  " -------");
                 esperandoAscensor.addAll(procesarPersonas(todasLasPersonas, tick));
                 // Log de consola
                 System.out.println("Entraron en el edificio ");
@@ -58,7 +58,7 @@ public class Planificador {
             } finally {
                 semaforoTick.release(cantidadAscensores); // Release permits for all Ascensor threads
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(2000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
