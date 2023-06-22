@@ -58,7 +58,7 @@ public class Planificador {
             } finally {
                 semaforoTick.release(cantidadAscensores); // Release permits for all Ascensor threads
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(100);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
