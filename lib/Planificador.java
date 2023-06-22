@@ -1,6 +1,4 @@
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
@@ -17,6 +15,7 @@ public class Planificador {
     ReentrantLock lockLevantarPasajero = new ReentrantLock(); // Locks para Threads
     // Semaforo ascensores
     Semaphore semaforoTick = new Semaphore(0);
+    Semaphore semaforoAscensores = new Semaphore(5);
 
     public Planificador() {
         // Se crea y le el archivo csv
@@ -45,14 +44,13 @@ public class Planificador {
         // Empieza Simulacion
         for (tick = 0; tick < ticksTotales; tick++) {
             try {
+                semaforoAscensores.acquire(cantidadAscensores);
                 System.out.println("------- Tick: " + tick + " -------");
                 esperandoAscensor.addAll(procesarPersonas(todasLasPersonas, tick));
                 // Log de consola
                 System.out.println("Entraron en el edificio ");
                 for (Persona persona : esperandoAscensor) {
-                    System.out.println("Persona " + persona.id +
-                    " va del " + persona.ubicacion +
-                    " --> " + persona.destino  
+                    System.out.println("Persona " + persona.id + " realiza pedido desde " + persona.ubicacion + " hasta " + persona.destino  
                     );
                 }
             } catch (Exception e) {

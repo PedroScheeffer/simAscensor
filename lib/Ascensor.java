@@ -47,14 +47,8 @@ class Ascensor implements Runnable {
                 irDestino();
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-
-            // Simular tiempo de trabajo
-            try {
-                Thread.sleep(50); // Trabajo del ascensor durante medio segundo
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
+            }finally{
+                Planificador.GetPlanificador().semaforoAscensores.release();
             }
         }
     }
