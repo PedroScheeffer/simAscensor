@@ -7,7 +7,7 @@ public class Planificador {
     String pathDefault = "files/archivoEntrada.csv";
     int tick = 0; 
     int ticksTotales = 2000; // cuantos ciclo de simulacion
-    int cantidadAscensores = 4;
+    int cantidadAscensores = 6;
     List<Persona> todasLasPersonas = new ArrayList<>();
     List<Persona> esperandoAscensor = new ArrayList<>();
     static Planificador _instancPlanificador; // queremos solo un planificado
@@ -15,7 +15,7 @@ public class Planificador {
     ReentrantLock lockLevantarPasajero = new ReentrantLock(); // Locks para Threads
     // Semaforo ascensores
     Semaphore semaforoTick = new Semaphore(0);
-    Semaphore semaforoAscensores = new Semaphore(5);
+    Semaphore semaforoAscensores = new Semaphore(cantidadAscensores);
 
     public Planificador() {
         // Se crea y le el archivo csv
