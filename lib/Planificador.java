@@ -22,6 +22,7 @@ public class Planificador {
         _instancPlanificador = this;
         FileManager fm = new FileManager();
         todasLasPersonas = fm.csvToPerson(pathDefault, true); // TODO mover a una variable para no recalcular
+        ticksTotales = todasLasPersonas.size() + 10;
     }
 
     public static Planificador GetPlanificador() {
