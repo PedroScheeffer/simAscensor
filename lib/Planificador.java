@@ -21,8 +21,8 @@ public class Planificador {
         // Se crea y le el archivo csv
         _instancPlanificador = this;
         FileManager fm = new FileManager();
-        todasLasPersonas = fm.csvToPerson(pathDefault, true); // TODO mover a una variable para no recalcular
-        ticksTotales = todasLasPersonas.size() + 20;
+        todasLasPersonas = fm.csvToPerson(pathDefault, true); // TODO mover a una variable para no recalcular.
+        ticksTotales = todasLasPersonas.size() + 20; // una aproximacion de el tiempo necesario para la simulacion.
     }
 
     public static Planificador GetPlanificador() {
